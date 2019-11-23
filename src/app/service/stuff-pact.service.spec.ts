@@ -9,39 +9,39 @@ describe('StuffServicePact', () => {
 
     let provider: PactWeb;
 
-    beforeAll(function(done) {
+    beforeAll((done) => {
         provider = new PactWeb({
             consumer: 'stuff-ui',
-            provider: 'stuffservice',
-            port: 1234,
-            host: '127.0.0.1'
+            provider: 'stuff-service',
+            port: 1235,
+            host: 'localhost'
         });
 
-        setTimeout(done, 30000);
+        setTimeout(done, 2000);
 
         provider.removeInteractions();
     });
 
-    afterAll((done) => {
-        provider.finalize()
-        .then(() => {
-            done();
-        }, (err) => {
-            done.fail(err);
+    // afterAll((done) => {
+    //     provider.finalize()
+    //     .then(() => {
+    //         done();
+    //     }, (err) => {
+    //         done.fail(err);
+    //     });
+    // });
+
+    beforeEach(() => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+        TestBed.configureTestingModule({
+            imports: [
+                HttpClientModule
+            ],
+            providers: [
+                StuffService
+            ]
         });
     });
-
-      beforeEach(() => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
-          TestBed.configureTestingModule({
-              imports: [
-                  HttpClientModule
-              ],
-              providers: [
-                  StuffService
-              ]
-          });
-      });
 
       afterEach((done) => {
           provider.verify().then(done, e => done.fail(e));
@@ -67,9 +67,9 @@ describe('StuffServicePact', () => {
                 },
                 willRespondWith: {
                     status: 200,
-                    body: Matchers.somethingLike({
+                    body: Matchers.somethingLike(
                          expectedStuff
-                    }),
+                    ),
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -79,13 +79,14 @@ describe('StuffServicePact', () => {
 
           it('should get stuff', (done) => {
               const stuffService: StuffService = TestBed.get(StuffService);
-
               stuffService.getStuff().subscribe((stuff) => {
+                  console.log("I GOT HERE");
+                  console.log(stuff);
                 //   expect(stuff).toEqual(expectedStuff);
                   done();
               }, (error) => {
                   done.fail(error);
-              })
-          })
+              });
+          });
       });
 })

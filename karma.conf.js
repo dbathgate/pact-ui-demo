@@ -36,12 +36,14 @@ module.exports = function (config) {
       cors: true,
       port: 1234,
       consumer: 'stuff-ui',
-      provider: 'stuffservice',
+      provider: 'stuff-service',
       dir: 'pacts',
-      spec: 2
+      spec: 2,
+      log: 'pact.log',
+      logLevel: 'DEBUG'
     }],
     proxies: {
-      '/stuff-service/': 'http://127.0.0.1:1234/stuff-service/'
+      '/stuff-service/': 'http://localhost:1234/stuff-service/'
     }
   });
 };
